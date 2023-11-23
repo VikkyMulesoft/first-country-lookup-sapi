@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<sub-flow name="get-countries-ImplSub_Flow" doc:id="74b87a65-d0cb-498d-aad2-fef1b23b4c3d" >
+		<logger level="INFO" doc:name="Log-before-request" doc:id="282ad0b6-3c50-4938-8c2b-14692cd62b33" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"log-trace" : "beforeRequest_get-countries-Impl",&#10;	"correlationId": vars.correlationId,&#10;	"payload": payload default""&#10;}]'/>
+		<http:request method="GET" doc:name="Request-firstorg-service" doc:id="df7d827e-88a6-4335-9caf-578358e675cc" config-ref="HTTP_Request_firstorg" path="${getcountriesreq.countriespath}" sendCorrelationId="ALWAYS" correlationId="#[vars.correlationId]" responseTimeout="${getcountriesreq.responsetimeout}">
+			<error-mapping targetType="CUSTOM:SERVICE_ERROR" />
+		</http:request>
+		<ee:transform doc:name="Final-response" doc:id="1c6d1b88-17f1-4f3c-a905-1ae1ebec545e">
+			<ee:message>
+				<ee:set-payload resource="dataweave/final-response.json.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log-after-request" doc:id="a4478614-4227-41ba-8984-3bb9e1fc4f8e" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"log-trace" : "afterRequest_get-countries-Impl",&#10;	"correlationId": vars.correlationId,&#10;	"payload": payload default""&#10;}]'/>
+	</sub-flow>
+</mule>

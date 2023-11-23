@@ -1,0 +1,37 @@
+#%RAML 1.0
+title: first-country-lookup-sapi
+description: Mobile API - this api is to lookup the country name based on country code
+baseUri: http://localhost:8081/api
+version: 1.0
+
+resourceTypes: 
+  getResource: !include raml-reuse-components/resource_types/getItem.raml
+
+traits: 
+  client-id-required: !include raml-reuse-components/traits/client-id-auth.raml  
+  hasError: !include raml-reuse-components/traits/hasError.raml
+  hasRequestItem: !include raml-reuse-components/traits/hasRequestItem.raml
+  hasResponseItem: !include raml-reuse-components/traits/hasResponseItem.raml
+  isTracked: !include raml-reuse-components/traits/isTracked.raml
+
+
+/countries:
+  description: look up countries based on country code
+  is: [client-id-required, hasError,isTracked]
+  get:
+    is:
+      [
+        hasResponseItem:{
+              exampleResponseItem: !include examples/response/getCountries-response.json
+            } 
+      ]
+    
+
+
+
+                          
+          
+  
+
+
+ 
