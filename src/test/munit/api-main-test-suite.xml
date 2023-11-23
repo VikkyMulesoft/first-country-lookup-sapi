@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="api-main-test-suite.xml" />
+	<munit:test name="SuccessTestSuite" doc:id="8e4d3148-08a6-44b7-b63c-1c0eb0b458fd" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="6f3f8993-1a9c-4a50-b9f8-9eeb6b0261ee" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request-firstorg-service" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('responses/getCountries-response.json')]" mediaType="application/json" />
+					<munit-tools:attributes value="#[{'statusCode' :200}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\countries:first-country-lookup-sapi-config" doc:id="7dcfabf4-0556-4634-8348-898aa0310f9c" name="get:\countries:first-country-lookup-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2a2cc8ed-ca9f-498a-b922-bc1799963999" is="#[MunitTools::equalTo(200)]" expression="#[attributes.statusCode]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ErrorTestSuite" doc:id="177364a1-0ab3-4594-9646-608376352068" description="Test" expectedErrorType="CUSTOM:SERVICE_ERROR">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="6e919c08-f9d2-4cbe-9a2c-39572dbacd6e" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request-firstorg-service" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('responses/getCountries-response.json')]" mediaType="application/json" />
+					<munit-tools:error typeId="CUSTOM:SERVICE_ERROR" />
+					
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\countries:first-country-lookup-sapi-config" doc:id="1a82a6dd-2e73-42d7-b14f-fbebcd8f15c6" name="get:\countries:first-country-lookup-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6f17a95b-3bf4-499b-8878-d18304e85c13" is="#[MunitTools::equalTo(400)]" expression="#[attributes.statusCode]"/>
+		</munit:validation>
+	</munit:test>
+	
+
+</mule>

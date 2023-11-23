@@ -10,7 +10,8 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="first-country-lookup-sapi-config" />
+        <set-variable value="#[attributes.headers.'x-correlation-Id' default correlationId]" doc:name="correlationId" doc:id="e5a420a4-f5fa-4964-aed2-f9f545c7620f" variableName="correlationId"/>
+		<apikit:router config-ref="first-country-lookup-sapi-config" />
         <error-handler ref="apikit-error-handler" />
     </flow>
     <flow name="first-country-lookup-sapi-console">
